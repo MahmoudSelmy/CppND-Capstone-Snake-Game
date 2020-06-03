@@ -4,16 +4,20 @@
 
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
-                   const std::size_t grid_width, const std::size_t grid_height)
+                   const std::size_t grid_width, 
+                   const std::size_t grid_height,
+                   bool has_wall)
     : screen_width(screen_width),
       screen_height(screen_height),
       grid_width(grid_width),
-      grid_height(grid_height) {
+      grid_height(grid_height),
+      has_wall(has_wall)
+{
   // Initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL could not initialize.\n";
     std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
-  }
+}
 
   // Create Window
   sdl_window = SDL_CreateWindow("Snake Game", SDL_WINDOWPOS_CENTERED,
@@ -61,6 +65,11 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
     SDL_RenderFillRect(sdl_renderer, &block);
   }
 
+  if(has_wall)
+  {
+    RenderWall(block);
+  }
+
   // Render snake's head
   block.x = static_cast<int>(snake.head_x) * block.w;
   block.y = static_cast<int>(snake.head_y) * block.h;
@@ -78,4 +87,25 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
 void Renderer::UpdateWindowTitle(int score, int fps) {
   std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
   SDL_SetWindowTitle(sdl_window, title.c_str());
+}
+
+void Renderer::RenderWall(SDL_Rect &block)
+{
+  SDL_SetRenderDrawColor(sdl_renderer , 0xFF, 0x00, 0x00, 0xFF);
+  int max_x = grid_width - 1;
+  int max_y = grid_height - 1;
+  for(int i=0; i<=max_x; i++)
+  {
+    for(int j=0;j<=max_y; j++)
+    {
+      if((i!=max_x)&&(j!=max_y)&&(i!=0)&&(j!=0))
+      {
+        continue;
+      }
+      block.x = i * block.w;
+      block.y = j * block.h;
+      SDL_RenderFillRect(sdl_renderer, &block);
+    }
+  }
+
 }
