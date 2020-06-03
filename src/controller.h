@@ -1,11 +1,13 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+class Game;
 #include "snake.h"
+
 
 class Controller {
  public:
-  void HandleInput(bool &running, Snake &snake) const;
+  void HandleInput(bool &running, Snake &snake, Game &game) const;
 
  private:
   void ChangeDirection(Snake &snake, Snake::Direction input,

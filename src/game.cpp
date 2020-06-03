@@ -6,7 +6,9 @@ Game::Game(std::size_t grid_width, std::size_t grid_height)
     : snake(grid_width, grid_height),
       engine(dev()),
       random_w(0, static_cast<int>(grid_width - 1)),
-      random_h(0, static_cast<int>(grid_height - 1)) {
+      random_h(0, static_cast<int>(grid_height - 1)),
+      isPaused(false) 
+{
   PlaceFood();
 }
 
@@ -23,7 +25,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-    controller.HandleInput(running, snake);
+    controller.HandleInput(running, snake, *this);
     Update();
     renderer.Render(snake, food);
 
@@ -65,8 +67,12 @@ void Game::PlaceFood() {
   }
 }
 
-void Game::Update() {
-  if (!snake.alive) return;
+void Game::Update() 
+{
+  if ((!snake.alive) || isPaused) 
+  {
+    return;
+  }
 
   snake.Update();
 
@@ -85,3 +91,8 @@ void Game::Update() {
 
 int Game::GetScore() const { return score; }
 int Game::GetSize() const { return snake.size; }
+
+void Game::TogglePaused()
+{
+  isPaused = !isPaused;
+}
