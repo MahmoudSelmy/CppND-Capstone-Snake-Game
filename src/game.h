@@ -9,7 +9,7 @@
 
 class Game {
  public:
-  Game(std::size_t grid_width, std::size_t grid_height);
+  Game(std::size_t grid_width, std::size_t grid_height, bool has_wall);
   void Run(Controller const &controller, Renderer &renderer,
            std::size_t target_frame_duration);
   int GetScore() const;
@@ -30,7 +30,8 @@ class Game {
   void PlaceFood();
   void Update();
 
-  bool isPaused;
+  bool is_paused;
+  bool has_wall;
 };
 
 #endif

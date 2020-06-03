@@ -2,13 +2,22 @@
 #include <iostream>
 #include "SDL.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
+Game::Game(std::size_t grid_width, std::size_t grid_height,bool has_wall)
     : snake(grid_width, grid_height),
       engine(dev()),
-      random_w(0, static_cast<int>(grid_width - 1)),
-      random_h(0, static_cast<int>(grid_height - 1)),
-      isPaused(false) 
+      is_paused(false),
+      has_wall(has_wall) 
 {
+  if(has_wall)
+  {
+    random_w = std::uniform_int_distribution<int>(1, static_cast<int>(grid_width - 2));
+    random_h = std::uniform_int_distribution<int>(1, static_cast<int>(grid_height - 2));
+  }
+  else
+  {
+    random_w = std::uniform_int_distribution<int>(0, static_cast<int>(grid_width - 1));
+    random_h = std::uniform_int_distribution<int>(0, static_cast<int>(grid_height - 1));
+  }
   PlaceFood();
 }
 
@@ -69,7 +78,7 @@ void Game::PlaceFood() {
 
 void Game::Update() 
 {
-  if ((!snake.alive) || isPaused) 
+  if ((!snake.alive) || is_paused) 
   {
     return;
   }
@@ -94,5 +103,5 @@ int Game::GetSize() const { return snake.size; }
 
 void Game::TogglePaused()
 {
-  isPaused = !isPaused;
+  is_paused = !is_paused;
 }
