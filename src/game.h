@@ -2,6 +2,9 @@
 #define GAME_H
 
 #include <random>
+#include <thread>
+#include <chrono>
+#include <future>
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
@@ -10,6 +13,7 @@
 class Game {
  public:
   Game(std::size_t grid_width, std::size_t grid_height, bool has_wall);
+  ~Game();
   void Run(Controller const &controller, Renderer &renderer,
            std::size_t target_frame_duration);
   int GetScore() const;
@@ -32,6 +36,8 @@ class Game {
 
   bool is_paused;
   bool has_wall;
+  bool has_bonus_food;
+  std::thread bonusTimer;
 };
 
 #endif

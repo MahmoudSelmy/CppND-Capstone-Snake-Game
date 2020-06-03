@@ -2,11 +2,34 @@
 #include <iostream>
 #include "SDL.h"
 
+void GenerateBonus(bool *has_bonus) 
+{
+  std::random_device dev;
+  std::mt19937 engine(dev());
+  std::uniform_int_distribution<int> randomDuration;
+  while(true)
+  {
+    randomDuration = std::uniform_int_distribution<int>(5, 20);
+    std::this_thread::sleep_for(std::chrono::seconds{randomDuration(engine)});
+    if(*has_bonus)
+    {
+      *has_bonus = false;
+      continue;
+    }
+    if(randomDuration(engine)%2 == 1)
+    {
+      *has_bonus = true;
+      continue;
+    }
+  }
+}
+
 Game::Game(std::size_t grid_width, std::size_t grid_height,bool has_wall)
     : snake(grid_width, grid_height, has_wall),
       engine(dev()),
       is_paused(false),
-      has_wall(has_wall) 
+      has_wall(has_wall),
+      has_bonus_food(false)
 {
   if(has_wall)
   {
@@ -18,9 +41,14 @@ Game::Game(std::size_t grid_width, std::size_t grid_height,bool has_wall)
     random_w = std::uniform_int_distribution<int>(0, static_cast<int>(grid_width - 1));
     random_h = std::uniform_int_distribution<int>(0, static_cast<int>(grid_height - 1));
   }
+  bonusTimer = std::move(std::thread(GenerateBonus, &has_bonus_food));
   PlaceFood();
 }
 
+Game::~Game()
+{
+  bonusTimer.join();
+}
 void Game::Run(Controller const &controller, Renderer &renderer,
                std::size_t target_frame_duration) {
   Uint32 title_timestamp = SDL_GetTicks();
@@ -36,7 +64,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake, *this);
     Update();
-    renderer.Render(snake, food);
+    renderer.Render(snake, food, has_bonus_food);
 
     frame_end = SDL_GetTicks();
 
@@ -89,8 +117,13 @@ void Game::Update()
   int new_y = static_cast<int>(snake.head_y);
 
   // Check if there's food over here
-  if (food.x == new_x && food.y == new_y) {
+  if (food.x == new_x && food.y == new_y) 
+  {
     score++;
+    if(has_bonus_food)
+    {
+      score += 5;
+    }
     PlaceFood();
     // Grow snake and increase speed.
     snake.GrowBody();

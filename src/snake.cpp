@@ -53,10 +53,13 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
     growing = false;
     size++;
   }
-  if(CheckPointOnWall(current_head_cell))
+  if(game_has_wall)
   {
-    alive = false;
-    return;
+    if(CheckPointOnWall(current_head_cell))
+    {
+      alive = false;
+      return;
+    }
   }
   // Check if the snake has died.
   for (auto const &item : body) 
