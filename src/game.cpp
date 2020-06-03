@@ -2,27 +2,6 @@
 #include <iostream>
 #include "SDL.h"
 
-void GenerateBonus(bool *has_bonus) 
-{
-  std::random_device dev;
-  std::mt19937 engine(dev());
-  std::uniform_int_distribution<int> randomDuration;
-  while(true)
-  {
-    randomDuration = std::uniform_int_distribution<int>(5, 20);
-    std::this_thread::sleep_for(std::chrono::seconds{randomDuration(engine)});
-    if(*has_bonus)
-    {
-      *has_bonus = false;
-      continue;
-    }
-    if(randomDuration(engine)%2 == 1)
-    {
-      *has_bonus = true;
-      continue;
-    }
-  }
-}
 
 Game::Game(std::size_t grid_width, std::size_t grid_height,bool has_wall)
     : snake(grid_width, grid_height, has_wall),
@@ -41,7 +20,7 @@ Game::Game(std::size_t grid_width, std::size_t grid_height,bool has_wall)
     random_w = std::uniform_int_distribution<int>(0, static_cast<int>(grid_width - 1));
     random_h = std::uniform_int_distribution<int>(0, static_cast<int>(grid_height - 1));
   }
-  bonusTimer = std::move(std::thread(GenerateBonus, &has_bonus_food));
+  bonusTimer = std::move(std::thread(&Game::StartBonusCycles, this));
   PlaceFood();
 }
 
@@ -64,8 +43,9 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake, *this);
     Update();
-    renderer.Render(snake, food, has_bonus_food);
 
+    RenderScene(renderer);
+    
     frame_end = SDL_GetTicks();
 
     // Keep track of how long each loop through the input/update/render cycle
@@ -89,6 +69,11 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   }
 }
 
+void Game::RenderScene(Renderer &renderer)
+{
+  std::lock_guard<std::mutex> lock(mutex);
+  renderer.Render(snake, food, has_bonus_food);
+}
 void Game::PlaceFood() {
   int x, y;
   while (true) {
@@ -137,4 +122,27 @@ int Game::GetSize() const { return snake.size; }
 void Game::TogglePaused()
 {
   is_paused = !is_paused;
+}
+
+void Game::StartBonusCycles() 
+{
+  std::random_device dev;
+  std::mt19937 engine(dev());
+  std::uniform_int_distribution<int> randomDuration;
+  while(true)
+  {
+    randomDuration = std::uniform_int_distribution<int>(5, 20);
+    std::this_thread::sleep_for(std::chrono::seconds{randomDuration(engine)});
+    std::lock_guard<std::mutex> lock(mutex);
+    if(has_bonus_food)
+    {
+      has_bonus_food = false;
+      continue;
+    }
+    if(randomDuration(engine)%2 == 1)
+    {
+      has_bonus_food = true;
+      continue;
+    }
+  }
 }

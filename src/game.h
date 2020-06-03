@@ -5,6 +5,7 @@
 #include <thread>
 #include <chrono>
 #include <future>
+#include <mutex>
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
@@ -33,11 +34,14 @@ class Game {
 
   void PlaceFood();
   void Update();
+  void StartBonusCycles();
+  void RenderScene(Renderer &renderer);
 
   bool is_paused;
   bool has_wall;
   bool has_bonus_food;
   std::thread bonusTimer;
+  std::mutex mutex;
 };
 
 #endif
