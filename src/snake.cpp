@@ -53,15 +53,30 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
     growing = false;
     size++;
   }
-
+  if(CheckPointOnWall(current_head_cell))
+  {
+    alive = false;
+    return;
+  }
   // Check if the snake has died.
-  for (auto const &item : body) {
-    if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
+  for (auto const &item : body) 
+  {
+    
+    if (current_head_cell.x == item.x && current_head_cell.y == item.y) 
+    {
       alive = false;
     }
   }
 }
 
+bool Snake::CheckPointOnWall(const SDL_Point &point)
+{
+  if(point.x == 1 || point.x == (grid_width-1) || point.y == 1 || point.y == (grid_height - 1))
+  {
+    return true;
+  }
+  return false;
+}
 void Snake::GrowBody() { growing = true; }
 
 // Inefficient method to check if cell is occupied by snake.

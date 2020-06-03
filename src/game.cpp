@@ -3,7 +3,7 @@
 #include "SDL.h"
 
 Game::Game(std::size_t grid_width, std::size_t grid_height,bool has_wall)
-    : snake(grid_width, grid_height),
+    : snake(grid_width, grid_height, has_wall),
       engine(dev()),
       is_paused(false),
       has_wall(has_wall) 

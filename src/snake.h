@@ -8,11 +8,12 @@ class Snake {
  public:
   enum class Direction { kUp, kDown, kLeft, kRight };
 
-  Snake(int grid_width, int grid_height)
+  Snake(int grid_width, int grid_height, bool game_has_wall)
       : grid_width(grid_width),
         grid_height(grid_height),
         head_x(grid_width / 2),
-        head_y(grid_height / 2) {}
+        head_y(grid_height / 2),
+        game_has_wall(game_has_wall){}
 
   void Update();
 
@@ -31,10 +32,12 @@ class Snake {
  private:
   void UpdateHead();
   void UpdateBody(SDL_Point &current_cell, SDL_Point &prev_cell);
+  bool CheckPointOnWall(const SDL_Point &point);
 
   bool growing{false};
   int grid_width;
   int grid_height;
+  bool game_has_wall;
 };
 
 #endif
