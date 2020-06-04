@@ -121,3 +121,10 @@ void Renderer::RenderWall(SDL_Rect &block)
   }
 
 }
+
+void Renderer::ShowResultMessage(int score, int size)
+{
+  std::string msgText{"Game Over !!\nScore: " + std::to_string(score) + "\nSize: " + std::to_string(size)};
+  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You died!", msgText.c_str(), sdl_window);
+  SDL_Quit();
+}

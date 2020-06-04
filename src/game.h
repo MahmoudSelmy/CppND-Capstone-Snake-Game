@@ -33,7 +33,7 @@ class Game {
   int score{0};
 
   void PlaceFood();
-  void Update();
+  void Update(Renderer &renderer);
   void StartBonusCycles();
   void RenderScene(Renderer &renderer);
 

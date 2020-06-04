@@ -37,12 +37,12 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   int frame_count = 0;
   bool running = true;
 
-  while (running) {
+  while (running && snake.alive) {
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake, *this);
-    Update();
+    Update(renderer);
 
     RenderScene(renderer);
     
@@ -89,12 +89,11 @@ void Game::PlaceFood() {
   }
 }
 
-void Game::Update() 
+void Game::Update(Renderer &renderer) 
 {
   if (!snake.alive)
   {
-    std::string msgText{"Game Over !!\n Score: " + std::to_string(score)};
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You died!", msgText.c_str(), NULL);
+    return;
   }
   if (is_paused) 
   {
