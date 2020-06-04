@@ -53,8 +53,36 @@ In this project, you can build your own C++ application or extend this Snake gam
 
 - Loops, Functions, I/O
 
+  1. The project accepts user input and processes the input. 
+     - [Line 14 @ main.cpp](./src/main.cpp)
+  1. The project demonstrates an understanding of C++ functions and control structures.
+     - Project is structured into classes and functions
+
 - Object Oriented Programming
+  
+  1. The project uses Object Oriented Programming techniques. 
+     - Project contains classes [controller. game, renderer ,and snake]
+  1. Classes use appropriate access specifiers for class members.
+     - Any class uses public and private access specifiers to expose abstract API and hide the details. 
+     - Example : [Game Class](./src/game.h)
+       - Run(...) is public because it allows client to run the game. [line 18]
+       - PlaceFood(...) is private because it's an implementation details.
+  1. Class constructors utilize member initialization lists.
+     - [Line 6 @ game.cpp](./src/game.cpp)
+  1. Classes encapsulate behavior.
+     - [Lines 24:45 @ game.cpp](./src/game.h)
 
 - Memory Management
+  1. The project makes use of references in function declarations.
+     - Run(..) takes controller and renderer by reference [Line 18 @ game.cpp](./src/game.h)
+  1. The project uses destructors appropriately.
+     - Using destructor to join thread before destruction.[Line 27 @ game.cpp](./src/game.cpp)
+  1. The project uses move semantics to move data, instead of copying it, where possible.
+     - Initilize thread member using move semantics [Line 23 @ game.cpp](./src/game.cpp)
 
 - Concurrency
+
+  1. The project uses multithreading.
+     - Background thread to provide random cycles [Line 23 @ game.cpp](./src/game.cpp)
+  1. A mutex or lock is used in the project.
+     - Using mutex and locks to prevent race condition[Line 140 @ game.cpp](./src/game.cpp)
