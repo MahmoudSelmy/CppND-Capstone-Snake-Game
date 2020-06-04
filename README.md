@@ -8,6 +8,25 @@ The Capstone Project gives you a chance to integrate what you've learned through
 
 In this project, you can build your own C++ application or extend this Snake game, following the principles you have learned throughout this Nanodegree Program. This project will demonstrate that you can independently create applications using a wide range of C++ features.
 
+## New Features
+* Pause
+  * Game can be **paused/resumed** by pressing `ESC` button.  
+
+* Support 2 modes: 
+
+  * Game asks user before launch to choose one of them.
+  
+    * Default mode
+
+    * Wall mode
+
+* Result message box shows when snake dies.
+
+* Random bouns periods:
+  
+  * There is random periods of bonus, it simply add +5 score to each food sample eaten during these periods "the food samples turns to green instead of yellow during the bonus period"
+
+
 ## Dependencies for Running Locally
 * cmake >= 3.7
   * All OSes: [click here for installation instructions](https://cmake.org/install/)
@@ -29,3 +48,13 @@ In this project, you can build your own C++ application or extend this Snake gam
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
 4. Run it: `./SnakeGame`.
+
+## Rubric Points
+
+- Loops, Functions, I/O
+
+- Object Oriented Programming
+
+- Memory Management
+
+- Concurrency
