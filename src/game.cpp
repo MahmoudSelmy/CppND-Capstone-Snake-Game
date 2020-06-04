@@ -91,7 +91,12 @@ void Game::PlaceFood() {
 
 void Game::Update() 
 {
-  if ((!snake.alive) || is_paused) 
+  if (!snake.alive)
+  {
+    std::string msgText{"Game Over !!\n Score: " + std::to_string(score)};
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You died!", msgText.c_str(), NULL);
+  }
+  if (is_paused) 
   {
     return;
   }
